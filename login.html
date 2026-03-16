@@ -1,0 +1,1579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Pattern | Immersive Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0a0a;
+            color: #f0f0f0;
+            min-height: 100vh;
+            overflow: hidden;
+            cursor: none;
+        }
+        
+        /* Custom Cursor */
+        .custom-cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ffb6c1;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.1s;
+        }
+        
+        .cursor-trail {
+            position: fixed;
+            width: 6px;
+            height: 6px;
+            background: #ffb6c1;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9998;
+            opacity: 0;
+        }
+        
+        /* Grand Opening Sequence */
+        .opening-sequence {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        .pattern-grid {
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: 
+                linear-gradient(90deg, transparent 49.5%, rgba(255, 182, 193, 0.1) 50%, transparent 50.5%),
+                linear-gradient(transparent 49.5%, rgba(255, 182, 193, 0.1) 50%, transparent 50.5%);
+            background-size: 40px 40px;
+            animation: gridFlow 30s linear infinite;
+            opacity: 0.3;
+        }
+        
+        @keyframes gridFlow {
+            0% { transform: translate(-20px, -20px); }
+            100% { transform: translate(0, 0); }
+        }
+        
+        .logo-reveal {
+            position: relative;
+            width: 500px; /* Reduced from 700px */
+            height: 180px; /* Reduced from 300px */
+            perspective: 1000px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .logo-letter {
+            position: relative;
+            font-size: 0;
+            font-weight: 900;
+            color: transparent;
+            text-transform: uppercase;
+            transform-style: preserve-3d;
+            animation: letterReveal 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+            margin: 0 5px; /* Reduced from 10px */
+        }
+        
+        @keyframes letterReveal {
+            0% {
+                font-size: 0;
+                color: transparent;
+                transform: translateZ(-600px) rotateY(180deg); /* Reduced from -800px */
+            }
+            50% {
+                font-size: 50px; /* Reduced from 80px */
+                color: #ffb6c1;
+                transform: translateZ(0) rotateY(0deg);
+                text-shadow: 0 0 20px #ffb6c1; /* Reduced from 25px */
+            }
+            100% {
+                font-size: 60px; /* Reduced from 90px */
+                color: #ffb6c1;
+                transform: translateZ(100px) rotateY(0deg); /* Reduced from 150px */
+                text-shadow: 0 0 30px #ffb6c1, 0 0 40px rgba(255, 182, 193, 0.5); /* Reduced sizes */
+            }
+        }
+        
+        /* Each letter positioned and delayed */
+        .logo-letter:nth-child(1) { animation-delay: 0.4s; } /* T */
+        .logo-letter:nth-child(2) { animation-delay: 0.8s; }   /* H */
+        .logo-letter:nth-child(3) { animation-delay: 1.2s; } /* E */
+        .logo-letter:nth-child(4) { animation-delay: 1.6s; }   /* P */
+        .logo-letter:nth-child(5) { animation-delay: 2.0s; } /* A */
+        .logo-letter:nth-child(6) { animation-delay: 2.4s; }   /* T */
+        .logo-letter:nth-child(7) { animation-delay: 2.8s; } /* T */
+        .logo-letter:nth-child(8) { animation-delay: 3.2s; }   /* E */
+        .logo-letter:nth-child(9) { animation-delay: 3.6s; } /* R */
+        .logo-letter:nth-child(10) { animation-delay: 4.0s; }  /* N */
+        
+        .logo-circle {
+            position: relative;
+            width: 80px; /* Reduced from 120px */
+            height: 80px; /* Reduced from 120px */
+            background: linear-gradient(135deg, #ffb6c1, #ffc0cb);
+            border-radius: 50%;
+            margin: 0 15px; /* Reduced from 25px */
+            transform-style: preserve-3d;
+            animation: circleReveal 1.8s 1.4s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+            opacity: 0;
+            box-shadow: 0 0 25px rgba(255, 182, 193, 0.5); /* Reduced from 40px */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        @keyframes circleReveal {
+            0% {
+                transform: translateZ(-600px) rotateY(180deg) scale(0); /* Reduced from -800px */
+                opacity: 0;
+            }
+            100% {
+                transform: translateZ(100px) rotateY(0deg) scale(1); /* Reduced from 150px */
+                opacity: 1;
+            }
+        }
+        
+        .logo-circle::before {
+            content: "∞";
+            font-size: 35px; /* Reduced from 50px */
+            font-weight: 900;
+            color: #8a2be2;
+            text-shadow: 0 0 8px rgba(138, 43, 226, 0.5); /* Reduced from 12px */
+        }
+        
+        .subtitle {
+            position: absolute;
+            bottom: -40px; /* Reduced from -50px */
+            width: 100%;
+            text-align: center;
+            font-size: 20px; /* Reduced from 24px */
+            color: transparent;
+            background: linear-gradient(90deg, #ffb6c1, #ffc0cb, #ffb6c1);
+            -webkit-background-clip: text;
+            background-clip: text;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: subtitleReveal 1.5s 4.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            letter-spacing: 1.5px; /* Reduced from 2px */
+        }
+        
+        .tagline {
+            position: absolute;
+            bottom: -70px; /* Reduced from -90px */
+            width: 100%;
+            text-align: center;
+            font-size: 14px; /* Reduced from 16px */
+            color: #aaa;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: subtitleReveal 1.5s 5.0s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            letter-spacing: 1px;
+            font-weight: 300;
+        }
+        
+        @keyframes subtitleReveal {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .fade-out {
+            animation: fadeToBlack 2s 6s forwards;
+        }
+        
+        @keyframes fadeToBlack {
+            0% { opacity: 1; }
+            70% { opacity: 1; }
+            100% { opacity: 0; visibility: hidden; }
+        }
+        
+        /* Main Login Container */
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            opacity: 0;
+            animation: mainFadeIn 1.5s 7s forwards;
+            overflow: hidden;
+        }
+        
+        @keyframes mainFadeIn {
+            to { opacity: 1; }
+        }
+        
+        /* Cosmic Background */
+        .cosmic-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(255, 182, 193, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(200, 150, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(255, 200, 220, 0.1) 0%, transparent 50%);
+            animation: bgPulse 15s ease-in-out infinite alternate;
+        }
+        
+        @keyframes bgPulse {
+            0% { filter: hue-rotate(0deg); }
+            100% { filter: hue-rotate(360deg); }
+        }
+        
+        .floating-particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .particle {
+            position: absolute;
+            background: linear-gradient(45deg, #ffb6c1, #ffc0cb);
+            border-radius: 50%;
+            filter: blur(2px);
+            animation: floatParticle 20s infinite linear;
+        }
+        
+        @keyframes floatParticle {
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translate(100px, -100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        /* 3D Stage */
+        .stage-3d {
+            width: 100%;
+            max-width: 1200px;
+            height: 600px;
+            position: relative;
+            perspective: 2000px;
+            margin-bottom: 40px;
+        }
+        
+        .stage-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            animation: stageFloat 8s ease-in-out infinite;
+        }
+        
+        @keyframes stageFloat {
+            0%, 100% { transform: translateY(0) rotateX(5deg); }
+            50% { transform: translateY(-30px) rotateX(0deg); }
+        }
+        
+        /* Singing Girl Character */
+        .singing-girl {
+            position: absolute;
+            width: 300px;
+            height: 600px;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%) translateZ(100px);
+        }
+        
+        /* Girl's Head */
+        .girl-head {
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #ffe6ea, #ffccd5);
+            border-radius: 50%;
+            top: 100px;
+            left: 90px;
+            box-shadow: 
+                inset -20px -20px 40px rgba(0, 0, 0, 0.3),
+                0 20px 40px rgba(0, 0, 0, 0.5);
+            animation: headSway 6s ease-in-out infinite;
+        }
+        
+        @keyframes headSway {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-5deg); }
+            75% { transform: rotate(5deg); }
+        }
+        
+        .girl-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .girl-eye {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #333344;
+            border-radius: 50%;
+            top: 45px;
+            overflow: hidden;
+            animation: eyeBlink 5s infinite;
+        }
+        
+        @keyframes eyeBlink {
+            0%, 90%, 93%, 100% { height: 20px; }
+            91.5% { height: 2px; }
+        }
+        
+        .girl-eye.left {
+            left: 30px;
+        }
+        
+        .girl-eye.right {
+            right: 30px;
+        }
+        
+        .girl-eye::after {
+            content: '';
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+            top: 4px;
+            left: 6px;
+            animation: eyeSparkle 3s infinite;
+        }
+        
+        @keyframes eyeSparkle {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        
+        .girl-mouth {
+            position: absolute;
+            width: 50px;
+            height: 25px;
+            background: #ffb6c1;
+            border-radius: 0 0 50px 50px;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: singMouth 2s infinite alternate;
+            box-shadow: 0 5px 15px rgba(255, 182, 193, 0.4);
+        }
+        
+        @keyframes singMouth {
+            0% { height: 20px; border-radius: 0 0 40px 40px; }
+            50% { height: 30px; border-radius: 0 0 60px 60px; }
+            100% { height: 25px; border-radius: 0 0 50px 50px; }
+        }
+        
+        /* Hair */
+        .girl-hair {
+            position: absolute;
+            width: 140px;
+            height: 80px;
+            background: linear-gradient(135deg, #ffc0cb, #ffb6c1);
+            border-radius: 70px 70px 0 0;
+            top: 80px;
+            left: 80px;
+            animation: hairFlow 4s ease-in-out infinite;
+        }
+        
+        @keyframes hairFlow {
+            0%, 100% { transform: translateY(0) scaleY(1); }
+            50% { transform: translateY(10px) scaleY(1.05); }
+        }
+        
+        /* Girl's Body */
+        .girl-body {
+            position: absolute;
+            width: 100px;
+            height: 200px;
+            background: linear-gradient(135deg, #ffb6c1, #ff69b4);
+            top: 220px;
+            left: 100px;
+            border-radius: 50px 50px 20px 20px;
+            box-shadow: 
+                inset -20px -20px 40px rgba(0, 0, 0, 0.4),
+                0 20px 40px rgba(0, 0, 0, 0.5);
+            animation: bodySway 4s ease-in-out infinite;
+        }
+        
+        @keyframes bodySway {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(2deg); }
+        }
+        
+        /* Arms - Singing Motion */
+        .girl-arm {
+            position: absolute;
+            width: 25px;
+            height: 120px;
+            background: linear-gradient(135deg, #ffe6ea, #ffccd5);
+            border-radius: 15px;
+            top: 220px;
+            transform-origin: top center;
+            animation: singArms 3s ease-in-out infinite;
+        }
+        
+        .girl-arm.left {
+            left: 70px;
+            animation-delay: 0s;
+        }
+        
+        .girl-arm.right {
+            right: 70px;
+            animation-delay: 0.5s;
+        }
+        
+        @keyframes singArms {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-40deg); }
+            50% { transform: rotate(-60deg); }
+            75% { transform: rotate(-40deg); }
+        }
+        
+        /* Musical Notes */
+        .music-notes {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .music-note {
+            position: absolute;
+            color: #ffb6c1;
+            font-size: 30px;
+            filter: drop-shadow(0 0 10px currentColor);
+            animation: noteFloat 6s infinite linear;
+        }
+        
+        @keyframes noteFloat {
+            0% {
+                transform: translateY(100px) rotate(0deg) scale(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+                transform: translateY(80px) rotate(0deg) scale(1);
+            }
+            100% {
+                transform: translateY(-200px) rotate(360deg) scale(1.5);
+                opacity: 0;
+            }
+        }
+        
+        /* Dress Pattern */
+        .dress-pattern {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: 
+                repeating-linear-gradient(
+                    45deg,
+                    transparent,
+                    transparent 10px,
+                    rgba(255, 255, 255, 0.1) 10px,
+                    rgba(255, 255, 255, 0.1) 20px
+                );
+            border-radius: 50px 50px 20px 20px;
+            animation: patternMove 20s linear infinite;
+        }
+        
+        @keyframes patternMove {
+            0% { background-position: 0 0; }
+            100% { background-position: 100px 100px; }
+        }
+        
+        /* Stage Effects */
+        .stage-light {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(255, 182, 193, 0.3), transparent 70%);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: lightPulse 4s ease-in-out infinite;
+            filter: blur(20px);
+        }
+        
+        @keyframes lightPulse {
+            0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.2); }
+        }
+        
+        /* Login Form */
+        .login-form-container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+            opacity: 0;
+            transform: translateY(50px);
+            animation: formSlideUp 1s 8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+        
+        @keyframes formSlideUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .login-card {
+            background: rgba(20, 20, 30, 0.8);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            padding: 40px;
+            border: 1px solid rgba(255, 182, 193, 0.3);
+            box-shadow: 
+                0 30px 60px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+        
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .login-header h2 {
+            font-size: 2.2rem;
+            background: linear-gradient(45deg, #ffb6c1, #ffc0cb);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 10px;
+            text-shadow: 0 0 25px rgba(255, 182, 193, 0.3);
+        }
+        
+        .login-header p {
+            color: #aaa;
+            font-size: 0.95rem;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ccc;
+            font-weight: 500;
+            font-size: 0.95rem;
+            padding-left: 5px;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 16px 20px;
+            background: rgba(10, 10, 15, 0.8);
+            border: 2px solid rgba(255, 182, 193, 0.2);
+            border-radius: 15px;
+            color: #fff;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #ffb6c1;
+            box-shadow: 0 0 0 3px rgba(255, 182, 193, 0.2);
+            background: rgba(15, 15, 20, 0.9);
+        }
+        
+        .form-input::placeholder {
+            color: #666;
+        }
+        
+        .input-icon {
+            position: absolute;
+            right: 20px;
+            top: 40px;
+            color: #ffb6c1;
+            font-size: 1.2rem;
+        }
+        
+        .remember-forgot {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .remember {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .remember input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #ffb6c1;
+        }
+        
+        .remember label {
+            color: #aaa;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        
+        .forgot-link {
+            color: #ffb6c1;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+        
+        .forgot-link:hover {
+            color: #ffc0cb;
+            text-decoration: underline;
+        }
+        
+        /* Login Button */
+        .login-btn {
+            background: linear-gradient(45deg, #ffb6c1, #ff69b4);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 18px;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 25px;
+        }
+        
+        .login-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.3), 
+                transparent
+            );
+            transition: left 0.6s;
+        }
+        
+        .login-btn:hover::before {
+            left: 100%;
+        }
+        
+        .login-btn:hover {
+            background: linear-gradient(45deg, #ff69b4, #ffb6c1);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(255, 182, 193, 0.4);
+        }
+        
+        /* Signup Link */
+        .signup-link {
+            text-align: center;
+            margin-top: 25px;
+        }
+        
+        .signup-link a {
+            color: #ffb6c1;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .signup-link a:hover {
+            color: #ffc0cb;
+            text-decoration: underline;
+        }
+        
+        /* Audio Visualization */
+        .audio-viz {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 100px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 3px;
+            padding: 20px;
+            opacity: 0.7;
+        }
+        
+        .viz-bar {
+            width: 4px;
+            background: linear-gradient(to top, #ffb6c1, #ffc0cb);
+            border-radius: 2px;
+            animation: vizPulse 1.5s infinite ease-in-out;
+        }
+        
+        @keyframes vizPulse {
+            0%, 100% { height: 20px; }
+            50% { height: 60px; }
+        }
+        
+        /* Responsive - Updated for smaller animation */
+        @media (max-width: 1200px) {
+            .stage-3d {
+                height: 500px;
+                max-width: 900px;
+            }
+            
+            .singing-girl {
+                transform: translate(-50%, -50%) translateZ(100px) scale(0.9);
+            }
+            
+            .logo-letter {
+                font-size: 50px !important; /* Reduced from 70px */
+            }
+            
+            .logo-circle {
+                width: 70px; /* Reduced from 100px */
+                height: 70px; /* Reduced from 100px */
+            }
+        }
+        
+        @media (max-width: 900px) {
+            .logo-reveal {
+                transform: scale(0.85);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .stage-3d {
+                height: 400px;
+            }
+            
+            .singing-girl {
+                transform: translate(-50%, -50%) translateZ(100px) scale(0.7);
+            }
+            
+            .login-card {
+                padding: 30px 20px;
+            }
+            
+            .login-header h2 {
+                font-size: 1.8rem;
+            }
+            
+            .logo-reveal {
+                transform: scale(0.75);
+                width: 450px; /* Adjusted from 600px */
+            }
+            
+            .logo-letter {
+                font-size: 45px !important; /* Reduced from 60px */
+                margin: 0 5px; /* Reduced from 8px */
+            }
+            
+            .logo-circle {
+                width: 60px; /* Reduced from 90px */
+                height: 60px; /* Reduced from 90px */
+                margin: 15px; /* Reduced from 20px */
+            }
+            
+            .logo-circle::before {
+                font-size: 30px; /* Reduced from 40px */
+            }
+            
+            .subtitle {
+                font-size: 18px; /* Reduced from 20px */
+                bottom: -35px; /* Adjusted from -40px */
+            }
+            
+            .tagline {
+                font-size: 13px; /* Reduced from 14px */
+                bottom: -60px; /* Adjusted from -75px */
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .logo-reveal {
+                transform: scale(0.65);
+                width: 380px; /* Adjusted from 500px */
+            }
+            
+            .logo-letter {
+                font-size: 38px !important; /* Reduced from 50px */
+                margin: 0 3px; /* Reduced from 5px */
+            }
+            
+            .logo-circle {
+                width: 50px; /* Reduced from 70px */
+                height: 50px; /* Reduced from 70px */
+                margin: 10px; /* Reduced from 15px */
+            }
+            
+            .logo-circle::before {
+                font-size: 25px; /* Reduced from 35px */
+            }
+            
+            .subtitle {
+                font-size: 16px; /* Reduced from 18px */
+                bottom: -30px; /* Adjusted from -35px */
+            }
+            
+            .tagline {
+                font-size: 12px; /* Same as before */
+                bottom: -50px; /* Adjusted from -65px */
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .stage-3d {
+                height: 300px;
+            }
+            
+            .singing-girl {
+                transform: translate(-50%, -50%) translateZ(100px) scale(0.5);
+            }
+            
+            .login-header h2 {
+                font-size: 1.6rem;
+            }
+            
+            .logo-reveal {
+                transform: scale(0.55);
+                width: 320px; /* Adjusted from 400px */
+            }
+            
+            .logo-letter {
+                font-size: 30px !important; /* Reduced from 35px */
+                margin: 0 2px; /* Reduced from 3px */
+            }
+            
+            .logo-circle {
+                width: 40px; /* Reduced from 60px */
+                height: 40px; /* Reduced from 60px */
+                margin: 8px; /* Reduced from 10px */
+            }
+            
+            .logo-circle::before {
+                font-size: 20px; /* Reduced from 30px */
+            }
+            
+            .subtitle {
+                font-size: 14px; /* Reduced from 16px */
+                bottom: -25px; /* Adjusted from -30px */
+            }
+            
+            .tagline {
+                font-size: 11px; /* Same as before */
+                bottom: -45px; /* Adjusted from -55px */
+            }
+        }
+        
+        @media (max-width: 380px) {
+            .logo-reveal {
+                transform: scale(0.5);
+                width: 280px; /* Adjusted from 350px */
+            }
+            
+            .logo-letter {
+                font-size: 25px !important; /* Reduced from 30px */
+                margin: 0 1px; /* Reduced from 2px */
+            }
+            
+            .logo-circle {
+                width: 35px; /* Reduced from 50px */
+                height: 35px; /* Reduced from 50px */
+                margin: 5px; /* Reduced from 8px */
+            }
+            
+            .logo-circle::before {
+                font-size: 18px; /* Reduced from 25px */
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Custom Cursor -->
+    <div class="custom-cursor" id="customCursor"></div>
+    
+    <!-- Grand Opening Sequence (1-2 minutes of animation) -->
+    <div class="opening-sequence fade-out" id="openingSequence">
+        <div class="pattern-grid"></div>
+        <div class="logo-reveal">
+            <!-- T H E   P A T T E R N with circle symbol -->
+            <div class="logo-letter">T</div>
+            <div class="logo-letter">H</div>
+            <div class="logo-letter">E</div>
+            
+            <div class="logo-circle"></div>
+            
+            <div class="logo-letter">P</div>
+            <div class="logo-letter">A</div>
+            <div class="logo-letter">T</div>
+            <div class="logo-letter">T</div>
+            <div class="logo-letter">E</div>
+            <div class="logo-letter">R</div>
+            <div class="logo-letter">N</div>
+        </div>
+    </div>
+    
+    <!-- Main Login Container -->
+    <div class="login-container" id="loginContainer">
+        <!-- Background Effects -->
+        <div class="cosmic-bg"></div>
+        <div class="floating-particles" id="particlesContainer"></div>
+        
+        <!-- 3D Stage -->
+        <div class="stage-3d">
+            <div class="stage-container">
+                <!-- Stage Light -->
+                <div class="stage-light"></div>
+                
+                <!-- Singing Girl Character -->
+                <div class="singing-girl">
+                    <!-- Hair -->
+                    <div class="girl-hair"></div>
+                    
+                    <!-- Head -->
+                    <div class="girl-head">
+                        <div class="girl-face">
+                            <div class="girl-eye left"></div>
+                            <div class="girl-eye right"></div>
+                            <div class="girl-mouth"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Body -->
+                    <div class="girl-body">
+                        <div class="dress-pattern"></div>
+                    </div>
+                    
+                    <!-- Arms -->
+                    <div class="girl-arm left"></div>
+                    <div class="girl-arm right"></div>
+                    
+                    <!-- Music Notes -->
+                    <div class="music-notes" id="musicNotes"></div>
+                </div>
+            </div>
+            
+            <!-- Audio Visualization -->
+            <div class="audio-viz" id="audioViz"></div>
+        </div>
+        
+        <!-- Login Form -->
+        <div class="login-form-container">
+            <div class="login-card">
+                <div class="login-header">
+                    <h2>Welcome Back</h2>
+                    <p>Enter The Pattern experience</p>
+                </div>
+                
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="username"><i class="fas fa-user"></i> Username</label>
+                        <input type="text" id="username" class="form-input" placeholder="Enter your username" required>
+                        <span class="input-icon"><i class="fas fa-user-circle"></i></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password"><i class="fas fa-lock"></i> Password</label>
+                        <input type="password" id="password" class="form-input" placeholder="Enter your password" required>
+                        <span class="input-icon"><i class="fas fa-key"></i></span>
+                    </div>
+                    
+                    <div class="remember-forgot">
+                        <div class="remember">
+                            <input type="checkbox" id="remember">
+                            <label for="remember">Remember me</label>
+                        </div>
+                        <a href="#" class="forgot-link" id="forgotPassword">Forgot password?</a>
+                    </div>
+                    
+                    <button type="submit" class="login-btn">
+                        <i class="fas fa-sign-in-alt"></i> ENTER THE PATTERN
+                    </button>
+                    
+                    <div class="signup-link">
+                        <p>New to The Pattern? <a href="#" id="createAccount">Create account</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Custom Cursor
+        const cursor = document.getElementById('customCursor');
+        const trails = [];
+        
+        document.addEventListener('mousemove', (e) => {
+            // Main cursor
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+            
+            // Create trail effect
+            if (Math.random() > 0.7) {
+                const trail = document.createElement('div');
+                trail.className = 'cursor-trail';
+                trail.style.left = e.clientX + 'px';
+                trail.style.top = e.clientY + 'px';
+                document.body.appendChild(trail);
+                
+                // Random size and color
+                const size = Math.random() * 10 + 5;
+                trail.style.width = size + 'px';
+                trail.style.height = size + 'px';
+                
+                // Light pink color variations
+                const colors = ['#ffb6c1', '#ffc0cb', '#ffccd5', '#ffe6ea'];
+                trail.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                trail.style.opacity = '0.7';
+                
+                // Animate trail
+                setTimeout(() => {
+                    trail.style.transition = 'all 0.5s ease';
+                    trail.style.opacity = '0';
+                    trail.style.transform = 'scale(0)';
+                    
+                    setTimeout(() => {
+                        if (trail.parentNode) {
+                            trail.remove();
+                        }
+                    }, 500);
+                }, 50);
+            }
+        });
+        
+        // Interactive cursor effects
+        document.addEventListener('mousedown', () => {
+            cursor.style.transform = 'scale(0.5)';
+            cursor.style.backgroundColor = '#ffc0cb';
+        });
+        
+        document.addEventListener('mouseup', () => {
+            cursor.style.transform = 'scale(1)';
+            cursor.style.backgroundColor = 'transparent';
+        });
+        
+        // Create floating particles
+        function createParticles() {
+            const container = document.getElementById('particlesContainer');
+            
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                // Random properties
+                const size = Math.random() * 15 + 5;
+                const left = Math.random() * 100;
+                const top = Math.random() * 100;
+                const delay = Math.random() * 20;
+                const duration = Math.random() * 15 + 10;
+                
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${left}%`;
+                particle.style.top = `${top}%`;
+                particle.style.animationDelay = `${delay}s`;
+                particle.style.animationDuration = `${duration}s`;
+                
+                // Light pink gradient colors
+                const hue = Math.floor(Math.random() * 30) + 330; // Pink hues
+                particle.style.background = `linear-gradient(45deg, 
+                    hsl(${hue}, 100%, 85%), 
+                    hsl(${hue}, 100%, 75%))`;
+                
+                container.appendChild(particle);
+            }
+        }
+        
+        // Create music notes
+        function createMusicNotes() {
+            const container = document.getElementById('musicNotes');
+            const notes = ['♪', '♫', '♬', '♩', '♪', '♫'];
+            
+            for (let i = 0; i < 12; i++) {
+                const note = document.createElement('div');
+                note.className = 'music-note';
+                note.textContent = notes[Math.floor(Math.random() * notes.length)];
+                
+                // Random properties
+                const left = Math.random() * 100;
+                const delay = Math.random() * 6;
+                const duration = Math.random() * 4 + 3;
+                
+                note.style.left = `${left}%`;
+                note.style.animationDelay = `${delay}s`;
+                note.style.animationDuration = `${duration}s`;
+                
+                // Light pink colors
+                const colors = ['#ffb6c1', '#ffc0cb', '#ffccd5', '#ff69b4'];
+                note.style.color = colors[Math.floor(Math.random() * colors.length)];
+                
+                container.appendChild(note);
+            }
+        }
+        
+        // Create audio visualization
+        function createAudioVisualization() {
+            const container = document.getElementById('audioViz');
+            
+            for (let i = 0; i < 40; i++) {
+                const bar = document.createElement('div');
+                bar.className = 'viz-bar';
+                
+                // Random properties
+                const delay = Math.random() * 1.5;
+                const duration = Math.random() * 0.5 + 1;
+                const height = Math.random() * 40 + 20;
+                
+                bar.style.animationDelay = `${delay}s`;
+                bar.style.animationDuration = `${duration}s`;
+                bar.style.height = `${height}px`;
+                
+                // Color variation
+                const opacity = Math.random() * 0.5 + 0.5;
+                bar.style.opacity = opacity.toString();
+                
+                container.appendChild(bar);
+            }
+        }
+        
+        // Login form handling
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const remember = document.getElementById('remember').checked;
+            
+            // Simple validation
+            if (!username || !password) {
+                showNotification('Please fill in all fields', 'error');
+                return;
+            }
+            
+            // Show loading state with enhanced effects
+            const submitBtn = this.querySelector('.login-btn');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ENTERING THE PATTERN...';
+            submitBtn.disabled = true;
+            
+            // Add visual effects during login
+            const stage = document.querySelector('.stage-container');
+            stage.style.animation = 'none';
+            setTimeout(() => {
+                stage.style.animation = 'stageFloat 4s ease-in-out infinite';
+                stage.style.animationDuration = '2s';
+            }, 50);
+            
+            // Create portal effect
+            createPortalEffect();
+            
+            // Simulate login process with longer delay for immersion
+            setTimeout(() => {
+                showNotification('Welcome to The Pattern! ✨', 'success');
+                
+                // Enhanced success effects
+                createSuccessEffects();
+                
+                // Redirect to index.html after immersive experience
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 3000);
+                
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }, 3000);
+        });
+        
+        // Create portal effect
+        function createPortalEffect() {
+            const portal = document.createElement('div');
+            portal.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                width: 0;
+                height: 0;
+                background: radial-gradient(circle, rgba(255, 182, 193, 0.8), transparent 70%);
+                border-radius: 50%;
+                transform: translate(-50%, -50%);
+                z-index: 1000;
+                filter: blur(20px);
+                transition: all 2s cubic-bezier(0.4, 0, 0.2, 1);
+            `;
+            
+            document.body.appendChild(portal);
+            
+            // Animate portal
+            setTimeout(() => {
+                portal.style.width = '1000px';
+                portal.style.height = '1000px';
+                portal.style.opacity = '0.8';
+            }, 50);
+            
+            setTimeout(() => {
+                portal.style.opacity = '0';
+                setTimeout(() => {
+                    if (portal.parentNode) {
+                        portal.remove();
+                    }
+                }, 1000);
+            }, 2000);
+        }
+        
+        // Create success effects
+        function createSuccessEffects() {
+            // Create confetti
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.style.cssText = `
+                    position: fixed;
+                    width: 10px;
+                    height: 10px;
+                    background: linear-gradient(45deg, #ffb6c1, #ffc0cb);
+                    border-radius: 2px;
+                    top: -20px;
+                    left: ${Math.random() * 100}%;
+                    z-index: 1001;
+                    animation: confettiFall 2s ease-in forwards;
+                `;
+                
+                // Add keyframes
+                if (!document.querySelector('#confetti-styles')) {
+                    const style = document.createElement('style');
+                    style.id = 'confetti-styles';
+                    style.textContent = `
+                        @keyframes confettiFall {
+                            0% {
+                                transform: translateY(0) rotate(0deg);
+                                opacity: 1;
+                            }
+                            100% {
+                                transform: translateY(100vh) rotate(${Math.random() * 360}deg);
+                                opacity: 0;
+                            }
+                        }
+                    `;
+                    document.head.appendChild(style);
+                }
+                
+                document.body.appendChild(confetti);
+                
+                // Remove after animation
+                setTimeout(() => {
+                    if (confetti.parentNode) {
+                        confetti.remove();
+                    }
+                }, 2000);
+            }
+        }
+        
+        // Forgot password
+        document.getElementById('forgotPassword').addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const email = prompt('Enter your email to reset password:');
+            if (email) {
+                showNotification('Password reset instructions sent! Check your email.', 'info');
+            }
+        });
+        
+        // Create account
+        document.getElementById('createAccount').addEventListener('click', function(e) {
+            e.preventDefault();
+            showNotification('Creating your Pattern account...', 'info');
+            
+            // Enhanced transition effect
+            const portal = document.createElement('div');
+            portal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(45deg, #ffb6c1, #ffc0cb);
+                z-index: 10000;
+                opacity: 0;
+                animation: portalExpand 1.5s forwards;
+            `;
+            
+            // Add keyframes
+            if (!document.querySelector('#portal-styles')) {
+                const style = document.createElement('style');
+                style.id = 'portal-styles';
+                style.textContent = `
+                    @keyframes portalExpand {
+                        0% { opacity: 0; transform: scale(0); }
+                        50% { opacity: 0.8; transform: scale(1); }
+                        100% { opacity: 1; transform: scale(1); }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+            
+            document.body.appendChild(portal);
+            
+            setTimeout(() => {
+                // In a real app, redirect to registration page
+                window.location.href = 'register.html';
+            }, 1500);
+        });
+        
+        // Show notification
+        function showNotification(message, type) {
+            // Remove existing notification
+            const existingNotification = document.querySelector('.notification');
+            if (existingNotification) {
+                existingNotification.remove();
+            }
+            
+            // Create notification
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            
+            let icon = 'info-circle';
+            let color = 'rgba(255, 182, 193, 0.9)';
+            
+            if (type === 'success') {
+                icon = 'check-circle';
+                color = 'rgba(255, 182, 193, 0.9)';
+            } else if (type === 'error') {
+                icon = 'exclamation-circle';
+                color = 'rgba(244, 67, 54, 0.9)';
+            }
+            
+            notification.innerHTML = `
+                <i class="fas fa-${icon}"></i>
+                <span>${message}</span>
+                <button class="close-notification"><i class="fas fa-times"></i></button>
+            `;
+            
+            // Add styles
+            notification.style.cssText = `
+                position: fixed;
+                top: 30px;
+                right: 30px;
+                background: ${color};
+                color: white;
+                padding: 18px 22px;
+                border-radius: 15px;
+                display: flex;
+                align-items: center;
+                gap: 15px;
+                z-index: 10000;
+                animation: slideIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+                min-width: 300px;
+                max-width: 350px;
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            `;
+            
+            // Add close button functionality
+            notification.querySelector('.close-notification').addEventListener('click', () => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            });
+            
+            // Add keyframes for animation
+            if (!document.querySelector('#notification-styles')) {
+                const style = document.createElement('style');
+                style.id = 'notification-styles';
+                style.textContent = `
+                    @keyframes slideIn {
+                        from { transform: translateX(100%) translateY(-20px); opacity: 0; }
+                        to { transform: translateX(0) translateY(0); opacity: 1; }
+                    }
+                    @keyframes slideOut {
+                        from { transform: translateX(0) translateY(0); opacity: 1; }
+                        to { transform: translateX(100%) translateY(-20px); opacity: 0; }
+                    }
+                    .close-notification {
+                        background: none;
+                        border: none;
+                        color: white;
+                        cursor: pointer;
+                        margin-left: auto;
+                        font-size: 1rem;
+                        opacity: 0.8;
+                        transition: opacity 0.2s, transform 0.2s;
+                    }
+                    .close-notification:hover {
+                        opacity: 1;
+                        transform: scale(1.1);
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+            
+            document.body.appendChild(notification);
+            
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.style.animation = 'slideOut 0.3s ease';
+                    setTimeout(() => notification.remove(), 300);
+                }
+            }, 5000);
+        }
+        
+        // Initialize everything
+        window.addEventListener('load', () => {
+            createParticles();
+            createMusicNotes();
+            createAudioVisualization();
+            
+            // Set default form values for demo
+            document.getElementById('username').value = 'pattern_explorer';
+            document.getElementById('password').value = '••••••••';
+            document.getElementById('remember').checked = true;
+            
+            // Add interactive effects to 3D stage
+            const stage = document.querySelector('.stage-container');
+            document.addEventListener('mousemove', (e) => {
+                const x = (e.clientX / window.innerWidth - 0.5) * 15;
+                const y = (e.clientY / window.innerHeight - 0.5) * 15;
+                stage.style.transform = `translateY(-30px) rotateX(${-y}deg) rotateY(${x}deg)`;
+            });
+            
+            // Reset rotation on mouse leave window
+            document.addEventListener('mouseleave', () => {
+                stage.style.transform = 'translateY(-30px) rotateX(5deg) rotateY(0deg)';
+            });
+            
+            // Click effects on stage
+            stage.addEventListener('click', () => {
+                // Create ripple effect
+                const ripple = document.createElement('div');
+                ripple.style.cssText = `
+                    position: absolute;
+                    width: 100px;
+                    height: 100px;
+                    border: 2px solid #ffb6c1;
+                    border-radius: 50%;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    animation: rippleExpand 1s ease-out forwards;
+                    pointer-events: none;
+                `;
+                
+                if (!document.querySelector('#ripple-styles')) {
+                    const style = document.createElement('style');
+                    style.id = 'ripple-styles';
+                    style.textContent = `
+                        @keyframes rippleExpand {
+                            0% { width: 0; height: 0; opacity: 1; }
+                            100% { width: 500px; height: 500px; opacity: 0; }
+                        }
+                    `;
+                    document.head.appendChild(style);
+                }
+                
+                stage.appendChild(ripple);
+                
+                setTimeout(() => {
+                    if (ripple.parentNode) {
+                        ripple.remove();
+                    }
+                }, 1000);
+                
+                // Add extra music notes
+                createExtraNotes();
+            });
+            
+            // Auto-clear opening sequence after 90 seconds (1.5 minutes)
+            setTimeout(() => {
+                const openingSequence = document.getElementById('openingSequence');
+                if (openingSequence.style.visibility !== 'hidden') {
+                    openingSequence.style.animation = 'fadeToBlack 2s forwards';
+                    
+                    // Show login container
+                    const loginContainer = document.getElementById('loginContainer');
+                    loginContainer.style.opacity = '1';
+                    loginContainer.style.animation = 'mainFadeIn 2s forwards';
+                }
+            }, 90000); // 90 seconds = 1.5 minutes
+        });
+        
+        // Create extra music notes on interaction
+        function createExtraNotes() {
+            const container = document.getElementById('musicNotes');
+            const notes = ['♪', '♫', '♬', '♩'];
+            
+            for (let i = 0; i < 8; i++) {
+                const note = document.createElement('div');
+                note.className = 'music-note';
+                note.textContent = notes[Math.floor(Math.random() * notes.length)];
+                
+                const left = Math.random() * 100;
+                note.style.left = `${left}%`;
+                note.style.animationDuration = '2s';
+                
+                const colors = ['#ffb6c1', '#ffc0cb', '#ffccd5', '#ff69b4'];
+                note.style.color = colors[Math.floor(Math.random() * colors.length)];
+                
+                container.appendChild(note);
+                
+                // Remove after animation
+                setTimeout(() => {
+                    if (note.parentNode) {
+                        note.remove();
+                    }
+                }, 2000);
+            }
+        }
+        
+        // Add keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            // Spacebar - Create visual effect
+            if (e.code === 'Space') {
+                e.preventDefault();
+                createPortalEffect();
+            }
+            
+            // Escape - Reset view
+            if (e.code === 'Escape') {
+                const stage = document.querySelector('.stage-container');
+                stage.style.transform = 'translateY(-30px) rotateX(5deg) rotateY(0deg)';
+            }
+        });
+    </script>
+</body>
+</html>
